@@ -40,8 +40,6 @@ export default function HomePage() {
                     &#47;
                   </span>
                   <span className="text-ink">{site.secondRole}</span>
-                  <span aria-hidden="true">&mdash;</span>
-                  <span>{site.school}</span>
                 </Eyebrow>
               </Reveal>
 
@@ -51,15 +49,12 @@ export default function HomePage() {
 
               <Reveal delay={0.5}>
                 <Prose className="mt-10">
+                  {/* Plain span rather than <em>, which Prose restyles to the
+                      display serif at a larger size. */}
                   <p>
-                    Six weeks in Cape Town as Scrum Master and technical lead for
-                    a grassroots housing-rights organization taught me the lesson
-                    I keep coming back to:{" "}
-                    <em className="font-sans text-body not-italic text-accent">
-                      the best decision usually isn&apos;t the most impressive
-                      one, it&apos;s the one that meets people where they already
-                      are.
-                    </em>
+                    Third-year CS major at UF, open to SWE, AI, and cloud
+                    internships. Most recently led the build of an AI chatbot and
+                    resource platform for a housing NPO in Cape Town.
                   </p>
                 </Prose>
               </Reveal>
@@ -85,12 +80,6 @@ export default function HomePage() {
                   sizes="(min-width: 768px) 30vw, 100vw"
                   priority
                 />
-                <p className="mt-4 font-mono text-label uppercase text-ink-muted">
-                  {site.degree}
-                </p>
-                <p className="mt-2 font-mono text-label uppercase text-ink-muted">
-                  Class of {site.graduation}
-                </p>
               </Reveal>
             </div>
           </div>
@@ -159,8 +148,11 @@ export default function HomePage() {
                 <div>
                   <Eyebrow>Study Abroad &mdash; 33.9249&deg; S, 18.4241&deg; E</Eyebrow>
                   <Display size={2} as="p" className="mt-6 max-w-measure">
-                    Six weeks in Cape Town, building something that had to{" "}
-                    <span className="text-accent">outlast us</span>.
+                    Six weeks in Cape Town, learning{" "}
+                    <span className="text-accent">
+                      who the software was really for
+                    </span>
+                    .
                   </Display>
                   <p className="mt-6 max-w-measure text-body text-ink-muted">
                     May 30 &ndash; July 11, 2026. Scrum Master and technical lead

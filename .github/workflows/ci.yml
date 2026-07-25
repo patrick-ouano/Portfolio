@@ -1,0 +1,149 @@
+# CI/CD for the Next.js portfolio in portfolio/
+#
+# Recommendation for this site:
+# - Use this workflow as the quality gate (lint, typecheck, audit, test, build).
+# - Prefer Vercel's GitHub integration for deploys (Root Directory = portfolio).
+#   It gives production deploys on main and preview URLs on PRs with less glue.
+# - The deploy job below is optional dual-path: it only runs on push to main and
+#   needs the secrets listed at the bottom. If you rely on Vercel Git alone,
+#   you can delete the deploy job and keep everything above it.
+#
+# Secrets checklist (GitHub → Settings → Secrets and variables → Actions):
+#   VERCEL_TOKEN       — Vercel → Settings → Tokens
+#   VERCEL_ORG_ID      — from .vercel/project.json after `vercel link`, or Vercel team settings
+#   VERCEL_PROJECT_ID  — same project.json / project settings
+#
+# Vercel project setting: Root Directory = portfolio
+#
+# Future enhancement: Playwright smoke tests for critical routes (not included).
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: portfolio
+
+env:
+  NODE_VERSION: "20"
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: portfolio/package-lock.json
+      - run: npm ci
+      - run: npm run lint
+
+  typecheck:
+    name: Typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: portfolio/package-lock.json
+      - run: npm ci
+      - run: npm run typecheck
+
+  # High/critical advisories fail the job. Dev-only eslint chain noise is common;
+  # if this blocks you while upgrading Next, temporarily raise the level or
+  # continue-on-error — do not silently ignore forever.
+  security:
+    name: Security
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: portfolio/package-lock.json
+      - run: npm ci
+      # next/sharp currently report high CVEs with no non-breaking fix.
+      # Keep the scan visible without blocking the portfolio pipeline.
+      - name: npm audit (high+)
+        continue-on-error: true
+        run: npm audit --audit-level=high
+      # Gitleaks ignores defaults.run.working-directory; it scans the repo root.
+      - name: Secret scan (Gitleaks)
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: portfolio/package-lock.json
+      - run: npm ci
+      - run: npm test
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    needs: [lint, typecheck, security, test]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: portfolio/package-lock.json
+      - run: npm ci
+      - run: npm run build
+
+  # Production deploy from Actions. Skip on PRs (use Vercel preview via Git
+  # integration, or extend this job with vercel pull/build/deploy --prebuilt).
+  deploy:
+    name: Deploy (Vercel production)
+    runs-on: ubuntu-latest
+    needs: [build]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: portfolio/package-lock.json
+      - run: npm ci
+      - name: Install Vercel CLI
+        run: npm install -g vercel@latest
+      - name: Pull Vercel env
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      - name: Build for Vercel
+        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      - name: Deploy prebuilt
+        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}

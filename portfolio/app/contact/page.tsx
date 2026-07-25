@@ -10,26 +10,34 @@ import {
   LinkedInIcon,
   Section,
 } from "@/components/ui";
-import { buttonClass } from "@/components/ui/button";
 import { contact, site } from "@/lib/content/site";
 
 export const metadata: Metadata = {
   title: "Contact — Patrick Ouano",
   description:
-    "Get in touch with Patrick Ouano about software engineering internships.",
+    "Get in touch with Patrick Ouano about software and AI engineering internships.",
 };
 
 const CHANNELS = [
   {
+    label: "Email",
+    value: contact.email,
+    href: `mailto:${contact.email}`,
+    note: "Best way to reach me",
+    Icon: MailIcon,
+  },
+  {
     label: "GitHub",
-    value: "github.com/patrick-ouano",
+    value: "patrick-ouano",
     href: contact.github,
+    note: "Source for most of the work",
     Icon: GithubIcon,
   },
   {
     label: "LinkedIn",
-    value: "linkedin.com/in/patrickouano",
+    value: "patrickouano",
     href: contact.linkedin,
+    note: "Full history and updates",
     Icon: LinkedInIcon,
   },
 ];
@@ -43,71 +51,110 @@ export default function ContactPage() {
         </Reveal>
 
         <Reveal delay={0.05}>
-          <Display size={1} as="h1" className="mt-6">
+          <Display size={1} as="h1" className="mt-6 max-w-3xl">
             Reach out anytime.
           </Display>
         </Reveal>
 
-        <div className="mt-14 grid gap-14 md:grid-cols-12 md:gap-12">
-          <div className="md:col-span-5">
-            <Reveal delay={0.1}>
-              <p className="max-w-measure text-lead text-ink-muted">
-                Open to software and AI engineering internships, and always up
-                for talking about a weird idea. Email is the fastest way to
-                reach me.
-              </p>
+        <Reveal delay={0.1}>
+          <p className="mt-8 max-w-measure text-lead text-ink-muted">
+            Open to software and AI engineering internships, and always up for
+            talking about a weird idea. Pick whichever of these is easiest.
+          </p>
+        </Reveal>
 
-              <a
-                href={`mailto:${contact.email}`}
-                className="mt-10 block text-display-3 text-ink transition-colors hover:text-accent"
-              >
-                {contact.email}
-              </a>
+        {/* Channels run across the page as cards rather than sitting in a
+            sidebar list, so the page doesn't read as one tall column. */}
+        <Reveal delay={0.15}>
+          <ul className="mt-14 grid gap-4 border-t border-rule pt-10 md:grid-cols-3">
+            {CHANNELS.map((channel) => (
+              <li key={channel.label}>
+                <a
+                  href={channel.href}
+                  target={channel.href.startsWith("mailto:") ? undefined : "_blank"}
+                  rel="noopener noreferrer"
+                  className="group flex h-full flex-col gap-5 border border-rule bg-surface p-6 transition-colors hover:border-accent"
+                >
+                  <span className="flex items-center justify-between gap-4">
+                    <channel.Icon className="size-5 text-accent" />
+                    <span
+                      aria-hidden="true"
+                      className="font-mono text-label text-ink-muted transition-transform duration-300 group-hover:translate-x-1 group-hover:text-accent"
+                    >
+                      &#8599;
+                    </span>
+                  </span>
 
-              <dl className="mt-10 flex flex-col gap-5 border-t border-rule pt-8">
-                {CHANNELS.map((channel) => (
-                  <div
-                    key={channel.label}
-                    className="flex flex-wrap items-center gap-x-6 gap-y-1"
-                  >
-                    <dt className="flex w-28 items-center gap-2.5 font-mono text-label uppercase text-ink-muted">
-                      <channel.Icon className="size-4 shrink-0 text-accent" />
+                  <span className="flex flex-col gap-2">
+                    <span className="font-mono text-label uppercase text-ink-muted">
                       {channel.label}
-                    </dt>
-                    <dd>
-                      <a
-                        href={channel.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-body text-ink underline decoration-rule decoration-1 underline-offset-4 transition-colors hover:text-accent hover:decoration-accent"
-                      >
-                        {channel.value}
-                      </a>
-                    </dd>
-                  </div>
-                ))}
+                    </span>
+                    <span className="break-all text-body text-ink transition-colors group-hover:text-accent">
+                      {channel.value}
+                    </span>
+                    <span className="font-mono text-label text-ink-muted">
+                      {channel.note}
+                    </span>
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </Reveal>
 
-                <div className="flex flex-wrap items-center gap-x-6 gap-y-1">
-                  <dt className="w-28 font-mono text-label uppercase text-ink-muted">
-                    Based in
-                  </dt>
-                  <dd className="text-body text-ink">{site.location}</dd>
-                </div>
-              </dl>
-
-              <Link href="/resume" className={buttonClass("outline", "mt-10")}>
-                R&eacute;sum&eacute;
-              </Link>
+        <div className="mt-20 grid gap-10 border-t border-rule pt-14 md:grid-cols-12 md:gap-12">
+          <div className="md:col-span-4">
+            <Reveal>
+              <Eyebrow>Send a message</Eyebrow>
+              <p className="mt-5 max-w-measure text-body text-ink-muted">
+                Fill this in and it opens your mail app with everything already
+                written, so you can check it before it sends.
+              </p>
             </Reveal>
           </div>
 
-          <div className="md:col-span-7">
-            <Reveal delay={0.15}>
+          <div className="md:col-span-8">
+            <Reveal delay={0.05}>
               <ContactForm />
             </Reveal>
           </div>
         </div>
+
+        <Reveal className="mt-20 flex flex-wrap items-center justify-between gap-x-12 gap-y-6 border-t border-rule pt-10">
+          <p className="font-mono text-label uppercase text-ink-muted">
+            Based in {site.location}
+          </p>
+
+          <Link
+            href="/resume"
+            className="group inline-flex items-baseline gap-3 font-mono text-label uppercase text-ink transition-colors hover:text-accent"
+          >
+            Read the r&eacute;sum&eacute;
+            <span
+              aria-hidden="true"
+              className="transition-transform duration-300 group-hover:translate-x-1"
+            >
+              &rarr;
+            </span>
+          </Link>
+        </Reveal>
       </Container>
     </Section>
+  );
+}
+
+function MailIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.75"
+      aria-hidden="true"
+      className={className}
+    >
+      <rect x="2" y="4.5" width="20" height="15" rx="1.5" />
+      <path d="m2.75 6 9.25 7 9.25-7" />
+    </svg>
   );
 }

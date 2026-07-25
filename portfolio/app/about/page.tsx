@@ -24,9 +24,9 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <>
-      <Section className="pb-12 md:pb-16">
+      <Section className="pt-16 pb-12 md:pt-20 md:pb-16">
         <Container>
-          <div className="grid gap-12 md:grid-cols-12 md:gap-12">
+          <div className="grid items-center gap-12 md:grid-cols-12 md:gap-12">
             <div className="md:col-span-7">
               <Reveal>
                 <Eyebrow>About</Eyebrow>
@@ -70,26 +70,20 @@ export default function AboutPage() {
         </Container>
       </Section>
 
-      <Section className="pt-4">
+      <Section className="pt-0">
         <Container>
-          <div className="grid gap-10 border-t border-rule pt-14 md:grid-cols-12 md:gap-12">
-            <div className="md:col-span-4">
-              <Reveal>
-                <Eyebrow>Education</Eyebrow>
-              </Reveal>
-            </div>
-
-            <div className="md:col-span-8">
-              <Reveal delay={0.05}>
+          <Block eyebrow="Education">
+            <Reveal delay={0.05}>
                 {/* Logo is blue on black, so it sits on a dark tile to match the
                     company logos on the work page. */}
-                <div className="relative aspect-video w-full max-w-xs overflow-hidden border border-rule bg-[#0b0b0b]">
+                <div className="relative aspect-[8/5] w-full max-w-[10rem]">
                   <Image
-                    src="/logos/uf.png"
+                    src="/logos/uf-gator.png"
                     alt="University of Florida"
                     fill
-                    sizes="(min-width: 768px) 20rem, 60vw"
-                    className="object-contain p-5"
+                    sizes="10rem"
+                    className="object-contain"
+                    priority
                   />
                 </div>
 
@@ -121,55 +115,32 @@ export default function AboutPage() {
                   ))}
                 </ul>
               </Reveal>
-            </div>
-          </div>
-        </Container>
-      </Section>
+          </Block>
 
-      <Section className="pt-0">
-        <Container>
-          <div className="grid gap-10 border-t border-rule pt-14 md:grid-cols-12 md:gap-12">
-            <div className="md:col-span-4">
-              <Reveal>
-                <Eyebrow>Skills</Eyebrow>
-              </Reveal>
+          <Block eyebrow="Skills">
+            <div className="flex flex-col gap-8">
+              {skills.map((group) => (
+                <Reveal key={group.label}>
+                  <p className="font-mono text-label uppercase text-accent">
+                    {group.label}
+                  </p>
+                  <ul className="mt-3 flex flex-wrap gap-x-2 gap-y-2">
+                    {group.items.map((item) => (
+                      <li
+                        key={item}
+                        className="border border-rule px-2.5 py-1 font-mono text-label uppercase text-ink-muted"
+                      >
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </Reveal>
+              ))}
             </div>
+          </Block>
 
-            <div className="md:col-span-8">
-              <div className="flex flex-col gap-8">
-                {skills.map((group) => (
-                  <Reveal key={group.label}>
-                    <p className="font-mono text-label uppercase text-accent">
-                      {group.label}
-                    </p>
-                    <ul className="mt-3 flex flex-wrap gap-x-2 gap-y-2">
-                      {group.items.map((item) => (
-                        <li
-                          key={item}
-                          className="border border-rule px-2.5 py-1 font-mono text-label uppercase text-ink-muted"
-                        >
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </Reveal>
-                ))}
-              </div>
-            </div>
-          </div>
-        </Container>
-      </Section>
-
-      <Section className="pt-0">
-        <Container>
-          <div className="grid gap-10 border-t border-rule pt-14 md:grid-cols-12 md:gap-12">
-            <div className="md:col-span-4">
-              <Reveal>
-                <Eyebrow>Clubs &amp; Leadership</Eyebrow>
-              </Reveal>
-            </div>
-
-            <div className="md:col-span-8 flex flex-col gap-12">
+          <Block eyebrow="Clubs & Leadership">
+            <div className="flex flex-col gap-12">
               {leadership.map((org) => (
                 <Reveal key={org.organization} delay={0.05}>
                   <p className="font-mono text-label uppercase text-accent">
@@ -208,9 +179,33 @@ export default function AboutPage() {
                 </Reveal>
               ))}
             </div>
-          </div>
+          </Block>
         </Container>
       </Section>
     </>
+  );
+}
+
+/**
+ * Shared row for the lower sections. These were separate <Section> elements,
+ * which stacked their vertical padding on top of each block's own top padding
+ * and left large dead gaps between them.
+ */
+function Block({
+  eyebrow,
+  children,
+}: {
+  eyebrow: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="grid gap-8 border-t border-rule py-14 md:grid-cols-12 md:gap-12 md:py-20">
+      <div className="md:col-span-4">
+        <Reveal>
+          <Eyebrow>{eyebrow}</Eyebrow>
+        </Reveal>
+      </div>
+      <div className="md:col-span-8">{children}</div>
+    </div>
   );
 }

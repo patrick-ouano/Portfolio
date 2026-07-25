@@ -37,6 +37,12 @@ export function SiteHeader() {
       <nav className="flex gap-6 overflow-x-auto border-t border-rule px-6 py-3 md:hidden">
         <NavItems />
         <Link
+          href="/resume"
+          className="whitespace-nowrap font-mono text-label uppercase text-ink-muted"
+        >
+          R&eacute;sum&eacute;
+        </Link>
+        <Link
           href="/contact"
           className="whitespace-nowrap font-mono text-label uppercase text-accent"
         >

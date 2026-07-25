@@ -2,10 +2,7 @@ export const site = {
   name: "Patrick Ouano",
   role: "Software Engineer",
   secondRole: "AI Engineer",
-  location: "Gainesville, Florida",
-  school: "University of Florida",
-  degree: "B.S. Computer Science, Minor in Statistics",
-  graduation: "May 2028",
+  location: "Kissimmee, Florida",
   resumePath: "/patrick-ouano-resume.pdf",
 };
 
@@ -14,6 +11,7 @@ export const navLinks = [
   { href: "/work", label: "Work" },
   { href: "/about", label: "About" },
   { href: "/study-abroad", label: "Cape Town" },
+  { href: "/personal", label: "Personal" },
 ];
 
 export const contact = {

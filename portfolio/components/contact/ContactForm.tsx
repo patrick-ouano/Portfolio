@@ -7,6 +7,24 @@ import { contact } from "@/lib/content/site";
 const FIELD =
   "mt-2 w-full border border-rule bg-surface px-4 py-3 text-body text-ink placeholder:text-ink-muted focus:border-accent focus:outline-none";
 
+/** Pure helper so mailto construction can be unit-tested without a browser. */
+export function buildMailtoHref({
+  name,
+  email,
+  message,
+  to = contact.email,
+}: {
+  name: string;
+  email: string;
+  message: string;
+  to?: string;
+}): string {
+  const subject = name ? `Portfolio enquiry from ${name}` : "Portfolio enquiry";
+  const body = [message, "", "—", name, email].filter(Boolean).join("\n");
+
+  return `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
+
 /**
  * There's no mail service wired up, so rather than a form that silently drops
  * messages this hands off to the visitor's own mail client with everything
@@ -19,13 +37,7 @@ export function ContactForm() {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
-    const subject = name ? `Portfolio enquiry from ${name}` : "Portfolio enquiry";
-    const body = [message, "", "—", name, email].filter(Boolean).join("\n");
-
-    window.location.href = `mailto:${contact.email}?subject=${encodeURIComponent(
-      subject,
-    )}&body=${encodeURIComponent(body)}`;
+    window.location.href = buildMailtoHref({ name, email, message });
   };
 
   return (
@@ -84,7 +96,7 @@ export function ContactForm() {
           name="message"
           required
           rows={6}
-          placeholder="Hey Patrick, we're hiring and your Cape Town work stood out."
+          placeholder="What you're working on, and where I might fit."
           value={message}
           onChange={(event) => setMessage(event.target.value)}
           className={FIELD}

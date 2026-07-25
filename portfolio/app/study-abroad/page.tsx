@@ -54,16 +54,17 @@ export default function StudyAbroadPage() {
           </Reveal>
 
           <Reveal delay={0.05}>
-            <Display size={1} as="h1" className="mt-6">
-              Cape Town, South Africa
+            <Display size={1} as="h1" className="mt-6 max-w-3xl">
+              Six weeks in Cape Town, learning{" "}
+              <span className="text-accent">who the software was really for</span>
+              .
             </Display>
           </Reveal>
 
           <Reveal delay={0.1}>
             <p className="mt-8 max-w-measure text-lead text-ink-muted">
-              Six weeks as Scrum Master and technical lead for a grassroots
-              housing-rights organization, building for tenants who live on
-              WhatsApp.
+              Scrum Master and technical lead for Housing Assembly, through EDU
+              Africa. May 30 &ndash; July 11, 2026.
             </p>
           </Reveal>
 
