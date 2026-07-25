@@ -1,0 +1,117 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --paper: #faf8f4;
+  --surface: #f2eee7;
+  --ink: #14110e;
+  --ink-muted: #4a443b;
+  --rule: #d3cbbd;
+  --accent: #1d4e89;
+  --accent-contrast: #faf8f4;
+}
+
+.dark {
+  --paper: #12100e;
+  --surface: #1c1917;
+  --ink: #f4efe7;
+  --ink-muted: #bab3a7;
+  --rule: #3a342d;
+  --accent: #7fa9d9;
+  --accent-contrast: #12100e;
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-rule: var(--rule);
+  --color-accent: var(--accent);
+  --color-accent-contrast: var(--accent-contrast);
+
+  --font-display: var(--font-instrument-serif);
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-jetbrains-mono);
+
+  /* Line heights stay at or above 1 so descenders never collide or get clipped
+     by the overflow containers the mask reveal needs. */
+  --text-display-1: clamp(2.75rem, 7.5vw, 6rem);
+  --text-display-1--line-height: 1.02;
+  --text-display-1--letter-spacing: -0.02em;
+
+  --text-display-2: clamp(2rem, 4.5vw, 3.25rem);
+  --text-display-2--line-height: 1.08;
+  --text-display-2--letter-spacing: -0.015em;
+
+  --text-display-3: clamp(1.5rem, 2.75vw, 2.125rem);
+  --text-display-3--line-height: 1.18;
+  --text-display-3--letter-spacing: -0.01em;
+
+  --text-lead: clamp(1.25rem, 1.8vw, 1.5rem);
+  --text-lead--line-height: 1.55;
+
+  --text-body: 1.125rem;
+  --text-body--line-height: 1.7;
+
+  --text-label: 0.75rem;
+  --text-label--line-height: 1.2;
+  --text-label--letter-spacing: 0.14em;
+
+  --text-numeral: clamp(2.5rem, 6vw, 5rem);
+  --text-numeral--line-height: 0.8;
+
+  --container-page: 78rem;
+  --container-measure: 66ch;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background-color: var(--accent);
+    color: var(--accent-contrast);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+}
+
+@layer components {
+  /* Instrument Serif ships a single weight, so dark mode restores the optical
+     weight lost to thin strokes on a dark ground with a hairline stroke. */
+  .display-type {
+    font-family: var(--font-display);
+    font-weight: 400;
+  }
+
+  .dark .display-type {
+    -webkit-text-stroke: 0.011em currentColor;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
