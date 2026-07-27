@@ -20,8 +20,9 @@ export default function WorkPage() {
         title="Where I've done the work."
         lead={
           <p>
-            Two engineering roles so far, both centered on AI systems that had to
-            keep running once I stopped touching them.
+            Two engineering roles, building AI and software 
+            people actually use: agents and pipelines at Raia, 
+            then a chatbot and resource platform for Housing Assembly.
           </p>
         }
       />
