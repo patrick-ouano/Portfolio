@@ -111,6 +111,38 @@ export const projects: Project[] = [
     featured: true,
   },
   {
+    slug: "latserof-technologies",
+    name: "Latserof Technologies",
+    year: "2026",
+    role: "Freelance Web Developer",
+    summary:
+      "Lead-gen marketing site for a licensed AV / automation integrator. Custom design system, survey request form, and production deploy on Vercel.",
+    stack: [
+      "Next.js",
+      "React",
+      "TypeScript",
+      "Tailwind CSS",
+      "Resend",
+      "Vitest",
+      "Playwright",
+      "GitHub Actions",
+      "Vercel",
+    ],
+    link: {
+      href: "https://www.ltgtechnology.com/",
+      label: "ltgtechnology.com",
+    },
+    embed: {
+      url: "https://www.ltgtechnology.com/",
+      label: "ltgtechnology.com",
+      screenshot: {
+        src: "/projects/latserof.png",
+        alt: "The Latserof Technologies homepage hero in a dark ink and gold gallery look",
+      },
+    },
+    featured: true,
+  },
+  {
     slug: "uffsa-website",
     name: "UFFSA Website",
     year: "2026",
